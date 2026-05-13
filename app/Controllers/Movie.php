@@ -6,8 +6,12 @@ use App\Models\FavoriteModel;
 
 class Movie extends BaseController
 {
-    private $apiKey = 'c67f3073212a259f86df2def996c230d';
+    private $apiKey;
     private $baseUrl = 'https://api.themoviedb.org/3';
+    public function __construct()
+{
+    $this->apiKey = env('TMDB_API_KEY');
+}
 
     public function index($page = 1)
     {
