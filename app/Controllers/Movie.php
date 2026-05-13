@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\FavoriteModel;
 
 class Movie extends BaseController
@@ -8,137 +9,210 @@ class Movie extends BaseController
     private $apiKey = 'c67f3073212a259f86df2def996c230d';
     private $baseUrl = 'https://api.themoviedb.org/3';
 
-
-    //INDEX
     public function index($page = 1)
-{
-    $client = \Config\Services::curlrequest();
+    {
+        try {
 
-    $response = $client->get($this->baseUrl . '/movie/popular', [
-        'verify' => false,
-        'query' => [
-            'api_key' => $this->apiKey,
-            'language' => 'en-US',
-            'page' => $page
-        ]
-    ]);
+            $client = \Config\Services::curlrequest();
 
-    $result = json_decode($response->getBody(), true);
+            $response = $client->get($this->baseUrl . '/movie/popular', [
 
-    $data['movies'] = $result['results'];
-    $data['currentPage'] = $page;
+                'verify' => false,
 
-    return view('home', $data);
-}
+                'query' => [
 
+                    'api_key' => $this->apiKey,
+                    'language' => 'en-US',
+                    'page' => $page
 
-//DETAIL
+                ]
+
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+
+            $data['movies'] = $result['results'];
+            $data['currentPage'] = $page;
+
+            return view('home', $data);
+
+        } catch (\Exception $e) {
+
+            return view('error_api');
+
+        }
+    }
+
     public function detail($id)
-{
-    $client = \Config\Services::curlrequest();
+    {
+        try {
 
-    $response = $client->get($this->baseUrl . '/movie/' . $id, [
-        'verify' => false,
-        'query' => [
-            'api_key' => $this->apiKey,
-            'language' => 'en-US',
-            'append_to_response' => 'videos'
-        ]
-    ]);
+            $client = \Config\Services::curlrequest();
 
-    $data['movie'] = json_decode($response->getBody(), true);
+            $response = $client->get($this->baseUrl . '/movie/' . $id, [
 
-    return view('detail', $data);
-}
+                'verify' => false,
 
+                'query' => [
 
-//SEARCH
+                    'api_key' => $this->apiKey,
+                    'language' => 'en-US',
+                    'append_to_response' => 'videos'
+
+                ]
+
+            ]);
+
+            $data['movie'] = json_decode($response->getBody(), true);
+
+            return view('detail', $data);
+
+        } catch (\Exception $e) {
+
+            return view('error_api');
+
+        }
+    }
+
     public function search()
-{
-    $keyword = $this->request->getGet('keyword');
+    {
+        try {
 
-    $client = \Config\Services::curlrequest();
+            $keyword = $this->request->getGet('keyword');
 
-    $response = $client->get($this->baseUrl . '/search/movie', [
-        'verify' => false,
-        'query' => [
-            'api_key' => $this->apiKey,
-            'query' => $keyword
-        ]
-    ]);
+            $client = \Config\Services::curlrequest();
 
-    $result = json_decode($response->getBody(), true);
+            $response = $client->get($this->baseUrl . '/search/movie', [
 
-    $data['movies'] = $result['results'];
+                'verify' => false,
 
-    // tambahkan ini
-    $data['currentPage'] = 1;
+                'query' => [
 
-    return view('home', $data);
-}
+                    'api_key' => $this->apiKey,
+                    'query' => $keyword
 
-//GENDRE
-public function genre($id)
-{
-    $client = \Config\Services::curlrequest();
+                ]
 
-    $response = $client->get($this->baseUrl . '/discover/movie', [
-        'verify' => false,
-        'query' => [
-            'api_key' => $this->apiKey,
-            'with_genres' => $id
-        ]
-    ]);
+            ]);
 
-    $result = json_decode($response->getBody(), true);
+            $result = json_decode($response->getBody(), true);
 
-    $data['movies'] = $result['results'];
-    $data['currentPage'] = 1;
+            $data['movies'] = $result['results'];
+            $data['currentPage'] = 1;
 
-    return view('home', $data);
-}
+            return view('home', $data);
 
-//FAVORITE
-public function favorite($id)
-{
-    $client = \Config\Services::curlrequest();
+        } catch (\Exception $e) {
 
-    $response = $client->get($this->baseUrl . '/movie/' . $id, [
-        'verify' => false,
-        'query' => [
-            'api_key' => $this->apiKey
-        ]
-    ]);
+            return view('error_api');
 
-    $movie = json_decode($response->getBody(), true);
+        }
+    }
 
-    $favoriteModel = new FavoriteModel();
+    public function genre($id)
+    {
+        try {
 
-    $favoriteModel->save([
-        'movie_id' => $movie['id'],
-        'title' => $movie['title'],
-        'poster' => $movie['poster_path'],
-        'rating' => $movie['vote_average']
-    ]);
+            $client = \Config\Services::curlrequest();
 
-    return redirect()->to('/');
-}
+            $response = $client->get($this->baseUrl . '/discover/movie', [
 
-public function favorites()
-{
-    $favoriteModel = new FavoriteModel();
+                'verify' => false,
 
-    $data['movies'] = $favoriteModel->findAll();
+                'query' => [
 
-    return view('favorites', $data);
-}
+                    'api_key' => $this->apiKey,
+                    'with_genres' => $id
 
-public function deleteFavorite($id)
-{
-    $favoriteModel = new FavoriteModel();
+                ]
 
-    $favoriteModel->delete($id);
+            ]);
 
-    return redirect()->to('/favorites');
-}
+            $result = json_decode($response->getBody(), true);
+
+            $data['movies'] = $result['results'];
+            $data['currentPage'] = 1;
+
+            return view('home', $data);
+
+        } catch (\Exception $e) {
+
+            return view('error_api');
+
+        }
+    }
+
+    public function favorite($id)
+    {
+        try {
+
+            $client = \Config\Services::curlrequest();
+
+            $response = $client->get($this->baseUrl . '/movie/' . $id, [
+
+                'verify' => false,
+
+                'query' => [
+
+                    'api_key' => $this->apiKey
+
+                ]
+
+            ]);
+
+            $movie = json_decode($response->getBody(), true);
+
+            $favoriteModel = new FavoriteModel();
+
+            $favoriteModel->save([
+
+                'movie_id' => $movie['id'],
+                'title' => $movie['title'],
+                'poster' => $movie['poster_path'],
+                'rating' => $movie['vote_average']
+
+            ]);
+
+            return redirect()->to('/favorites');
+
+        } catch (\Exception $e) {
+
+            return view('error_api');
+
+        }
+    }
+
+    public function favorites()
+    {
+        try {
+
+            $favoriteModel = new FavoriteModel();
+
+            $data['movies'] = $favoriteModel->findAll();
+
+            return view('favorites', $data);
+
+        } catch (\Exception $e) {
+
+            return view('error_api');
+
+        }
+    }
+
+    public function deleteFavorite($id)
+    {
+        try {
+
+            $favoriteModel = new FavoriteModel();
+
+            $favoriteModel->delete($id);
+
+            return redirect()->to('/favorites');
+
+        } catch (\Exception $e) {
+
+            return view('error_api');
+
+        }
+    }
 }
