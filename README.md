@@ -84,7 +84,6 @@ Website movie modern menggunakan:
 ## Features
 
 - Netflix UI
-- Favorite Movie
 - Genre Filter
 - Pagination
 - Loading Skeleton
