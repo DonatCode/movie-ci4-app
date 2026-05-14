@@ -34,13 +34,6 @@
 
             </a>
 
-            <a href="/favorite/<?= $movie['id']; ?>"
-               class="btn btn-dark w-100 border border-secondary">
-
-               + My List
-
-            </a>
-
         </div>
 
     </div>

@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\FavoriteModel;
-
 class Movie extends BaseController
 {
     private $apiKey;
@@ -146,77 +144,6 @@ class Movie extends BaseController
         }
     }
 
-    public function favorite($id)
-    {
-        try {
 
-            $client = \Config\Services::curlrequest();
 
-            $response = $client->get($this->baseUrl . '/movie/' . $id, [
-
-                'verify' => false,
-
-                'query' => [
-
-                    'api_key' => $this->apiKey
-
-                ]
-
-            ]);
-
-            $movie = json_decode($response->getBody(), true);
-
-            $favoriteModel = new FavoriteModel();
-
-            $favoriteModel->save([
-
-                'movie_id' => $movie['id'],
-                'title' => $movie['title'],
-                'poster' => $movie['poster_path'],
-                'rating' => $movie['vote_average']
-
-            ]);
-
-            return redirect()->to('/favorites');
-
-        } catch (\Exception $e) {
-
-            return view('error_api');
-
-        }
-    }
-
-    public function favorites()
-    {
-        try {
-
-            $favoriteModel = new FavoriteModel();
-
-            $data['movies'] = $favoriteModel->findAll();
-
-            return view('favorites', $data);
-
-        } catch (\Exception $e) {
-
-            return view('error_api');
-
-        }
-    }
-
-    public function deleteFavorite($id)
-    {
-        try {
-
-            $favoriteModel = new FavoriteModel();
-
-            $favoriteModel->delete($id);
-
-            return redirect()->to('/favorites');
-
-        } catch (\Exception $e) {
-
-            return view('error_api');
-
-        }
-    }
 }

@@ -70,6 +70,36 @@
 
         }
 
+        .nav-link.active{
+
+    color:white !important;
+
+    font-weight:bold;
+
+    position:relative;
+
+}
+
+.nav-link.active::after{
+
+    content:'';
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-5px;
+
+    width:100%;
+
+    height:2px;
+
+    background:#e50914;
+
+    border-radius:10px;
+
+}
+
         .search-box{
 
             background:#141414;
@@ -234,27 +264,43 @@
 
             <ul class="navbar-nav ms-4">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
+    <li class="nav-item">
+        <a class="nav-link <?= current_url() == base_url('/') ? 'active' : ''; ?>"
+           href="/">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/genre/28">Action</a>
-                </li>
+           Home
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/genre/35">Comedy</a>
-                </li>
+        </a>
+    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/genre/27">Horror</a>
-                </li>
+    <li class="nav-item">
+        <a class="nav-link <?= strpos(current_url(), '/genre/28') ? 'active' : ''; ?>"
+           href="/genre/28">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/favorites">My List</a>
-                </li>
+           Action
 
-            </ul>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link <?= strpos(current_url(), '/genre/35') ? 'active' : ''; ?>"
+           href="/genre/35">
+
+           Comedy
+
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link <?= strpos(current_url(), '/genre/27') ? 'active' : ''; ?>"
+           href="/genre/27">
+
+           Horror
+
+        </a>
+    </li>
+
+</ul>
 
             <div class="ms-auto d-flex align-items-center">
 
