@@ -2,15 +2,15 @@
 
 <?= $this->section('content'); ?>
 
-<h2 class="mb-4 fw-bold">
-    🔥 Popular Movies
+<h2 class="section-title">
+    Popular Movies
 </h2>
 
 <div class="row" id="movie-container">
 
 <?php foreach($movies as $movie): ?>
 
-<div class="col-md-3 mb-4">
+<div class="col-6 col-md-4 col-lg-3 mb-4">
 
     <div class="card movie-card h-100">
 
@@ -24,22 +24,22 @@
             </h5>
 
             <p class="rating">
-                ⭐ <?= $movie['vote_average']; ?>
+                Rating: <?= $movie['vote_average']; ?>/10
             </p>
 
             <a href="/detail/<?= $movie['id']; ?>"
-               class="btn btn-netflix w-100">
+               class="btn btn-netflix w-100 mb-2">
 
-               View Detail
+               View Details
 
             </a>
 
             <a href="/favorite/<?= $movie['id']; ?>"
-   class="btn btn-warning w-100 mt-2">
+               class="btn btn-dark w-100 border border-secondary">
 
-   ❤ Favorite
+               + My List
 
-</a>
+            </a>
 
         </div>
 
@@ -56,7 +56,7 @@
     <?php if($currentPage > 1): ?>
 
     <a href="/page/<?= $currentPage - 1; ?>"
-       class="btn btn-secondary me-2">
+       class="btn btn-dark border border-secondary me-2">
 
        Previous
 
